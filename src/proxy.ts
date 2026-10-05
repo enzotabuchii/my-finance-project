@@ -3,10 +3,9 @@ import { SESSION_COOKIE, verifySessionToken } from "@/lib/session";
 
 /**
  * Checagem otimista de autenticação (Next 16: "proxy" substitui "middleware").
- * Rotas públicas: login, cron (protegido por CRON_SECRET) e webhook do Pluggy
- * (protegido por WEBHOOK_SECRET na query string).
+ * Rotas públicas: login, cron (protegido por CRON_SECRET)
  */
-const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/cron", "/api/webhooks/pluggy"];
+const PUBLIC_PATHS = ["/login", "/api/auth/login", "/api/cron"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;

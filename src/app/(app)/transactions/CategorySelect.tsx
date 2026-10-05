@@ -3,12 +3,13 @@
 import { useTransition } from "react";
 import { updateTransactionCategoryAction } from "@/app/actions/transactions";
 import type { Category } from "@/db/schema";
+import { Loader2 } from "lucide-react";
 
-export function CategorySelect({ 
-  transactionId, 
-  currentCategoryId, 
-  categories 
-}: { 
+export function CategorySelect({
+  transactionId,
+  currentCategoryId,
+  categories,
+}: {
   transactionId: string;
   currentCategoryId: number | null;
   categories: Category[];
@@ -16,24 +17,32 @@ export function CategorySelect({
   const [isPending, startTransition] = useTransition();
 
   return (
-    <select
-      disabled={isPending}
-      value={currentCategoryId ?? ""}
-      onChange={(e) => {
-        const val = e.target.value;
-        const numVal = val ? parseInt(val, 10) : null;
-        startTransition(async () => {
-          await updateTransactionCategoryAction(transactionId, numVal);
-        });
-      }}
-      className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-blue-600 sm:text-sm sm:leading-6 disabled:opacity-50"
-    >
-      <option value="">Sem categoria</option>
-      {categories.map((c) => (
-        <option key={c.id} value={c.id}>
-          {c.icon} {c.name}
-        </option>
-      ))}
-    </select>
+    <div className="relative inline-flex items-center w-full max-w-[190px]">
+      <select
+        disabled={isPending}
+        value={currentCategoryId ?? ""}
+        onChange={(e) => {
+          const val = e.target.value;
+          const numVal = val ? parseInt(val, 10) : null;
+          startTransition(async () => {
+            await updateTransactionCategoryAction(transactionId, numVal);
+          });
+        }}
+        className="block w-full rounded-xl border border-slate-200 bg-slate-50/50 py-1.5 pl-2.5 pr-7 text-xs font-medium text-slate-700 hover:border-slate-300 hover:bg-white focus:bg-white focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-100 transition shadow-2xs disabled:opacity-50 cursor-pointer"
+      >
+        <option value="">Sem categoria</option>
+        {categories.map((c) => (
+          <option key={c.id} value={c.id}>
+            {c.icon} {c.name}
+          </option>
+        ))}
+      </select>
+      {isPending && (
+        <div className="pointer-events-none absolute right-2 flex items-center">
+          <Loader2 className="h-3 w-3 animate-spin text-blue-600" />
+        </div>
+      )}
+    </div>
   );
 }
+

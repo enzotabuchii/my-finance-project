@@ -2,13 +2,14 @@ import { Sidebar } from "@/components/layout/Sidebar";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
+    <div className="min-h-screen bg-slate-50/60 antialiased selection:bg-blue-600 selection:text-white">
       <Sidebar />
-      <main className="lg:pl-72 h-full">
-        <div className="px-4 py-10 sm:px-6 lg:px-8 max-w-7xl mx-auto h-full">
+      <main className="lg:pl-72 min-h-screen flex flex-col">
+        <div className="flex-1 px-4 py-8 sm:px-8 lg:px-10 max-w-7xl w-full mx-auto">
           {children}
         </div>
       </main>
     </div>
   );
 }
+

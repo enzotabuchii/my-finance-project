@@ -130,3 +130,49 @@ export type Transaction = typeof transactions.$inferSelect;
 export type Account = typeof accounts.$inferSelect;
 export type Budget = typeof budgets.$inferSelect;
 export type Rule = typeof rules.$inferSelect;
+
+import { relations } from "drizzle-orm";
+
+export const transactionsRelations = relations(transactions, ({ one }) => ({
+  account: one(accounts, {
+    fields: [transactions.accountId],
+    references: [accounts.id],
+  }),
+  category: one(categories, {
+    fields: [transactions.categoryId],
+    references: [categories.id],
+  }),
+}));
+
+export const accountsRelations = relations(accounts, ({ one, many }) => ({
+  item: one(items, {
+    fields: [accounts.itemId],
+    references: [items.id],
+  }),
+  transactions: many(transactions),
+}));
+
+export const itemsRelations = relations(items, ({ many }) => ({
+  accounts: many(accounts),
+}));
+
+export const categoriesRelations = relations(categories, ({ many }) => ({
+  transactions: many(transactions),
+  rules: many(rules),
+  budgets: many(budgets),
+}));
+
+export const rulesRelations = relations(rules, ({ one }) => ({
+  category: one(categories, {
+    fields: [rules.categoryId],
+    references: [categories.id],
+  }),
+}));
+
+export const budgetsRelations = relations(budgets, ({ one, many }) => ({
+  category: one(categories, {
+    fields: [budgets.categoryId],
+    references: [categories.id],
+  }),
+  alerts: many(budgetAlerts),
+}));

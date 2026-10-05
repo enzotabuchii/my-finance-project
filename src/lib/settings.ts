@@ -5,7 +5,6 @@ import { db, schema } from "@/db";
 export type CalendarMode = "each" | "daily" | "off";
 
 export interface AppSettings {
-  pluggyItemIds: string[];
   googleRefreshToken: string | null;
   googleCalendarId: string | null;
   googleEmail: string | null;
@@ -16,7 +15,6 @@ export interface AppSettings {
 }
 
 const DEFAULTS: AppSettings = {
-  pluggyItemIds: [],
   googleRefreshToken: null,
   googleCalendarId: null,
   googleEmail: null,
@@ -43,14 +41,4 @@ export async function setSetting<K extends keyof AppSettings>(key: K, value: App
     .insert(schema.settings)
     .values({ key, value })
     .onConflictDoUpdate({ target: schema.settings.key, set: { value } });
-}
-
-/** IDs de items vindos do banco + variável de ambiente PLUGGY_ITEM_IDS (separados por vírgula). */
-export async function getItemIds(): Promise<string[]> {
-  const fromEnv = (process.env.PLUGGY_ITEM_IDS ?? "")
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-  const fromDb = await getSetting("pluggyItemIds");
-  return [...new Set([...fromEnv, ...fromDb])];
 }

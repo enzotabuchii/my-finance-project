@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { checkPassword, createSessionToken, SESSION_COOKIE } from "@/lib/session";
 import { redirect } from "next/navigation";
 
-export async function loginAction(formData: FormData) {
+export async function loginAction(state: any, formData: FormData) {
   const password = formData.get("password");
   if (typeof password !== "string" || !checkPassword(password)) {
     return { error: "Senha incorreta" };
